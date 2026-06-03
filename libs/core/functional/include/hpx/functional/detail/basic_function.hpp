@@ -70,7 +70,7 @@ namespace hpx::util::detail {
 
         [[nodiscard]] std::size_t get_function_address() const;
         [[nodiscard]] char const* get_function_annotation() const;
-        [[nodiscard]] util::itt::string_handle get_function_annotation_itt()
+        [[nodiscard]] hpx::tracing::annotation_handle get_function_annotation_tracing()
             const;
 
     protected:
@@ -247,7 +247,7 @@ namespace hpx::util::detail {
 
         using base_type::get_function_address;
         using base_type::get_function_annotation;
-        using base_type::get_function_annotation_itt;
+        using base_type::get_function_annotation_tracing;
 
     private:
         [[nodiscard]] static constexpr vtable const* get_empty_vtable() noexcept

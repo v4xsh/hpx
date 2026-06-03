@@ -549,7 +549,7 @@ namespace hpx::threads {
         {
             return {desc.get_description(), thrdptr->get_thread_phase(),
                 thrdptr, thrdptr->is_stackless(), 0, false,
-                desc.get_description_itt().handle_};
+                desc.get_description_tracing().handle_};
         }
         return {"address", thrdptr->get_thread_phase(), thrdptr,
             thrdptr->is_stackless(), desc.get_address(), true, nullptr};

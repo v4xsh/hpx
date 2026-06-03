@@ -75,10 +75,7 @@ namespace hpx::threads::policies {
         if (modes_[num_thread].data_.load(std::memory_order_relaxed) &
             policies::scheduler_mode::enable_idle_backoff)
         {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            static hpx::util::itt::event notify_event("idle_callback");
-            hpx::util::itt::mark_event e(notify_event);
-#endif
+            hpx::tracing::mark_event("idle_callback");
             // Put this thread to sleep for some time, additionally it gets
             // woken up on new work.
 
@@ -119,10 +116,7 @@ namespace hpx::threads::policies {
     void scheduler_base::do_some_work([[maybe_unused]] std::size_t num_thread)
     {
 #if defined(HPX_HAVE_THREAD_MANAGER_IDLE_BACKOFF)
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-        static hpx::util::itt::event notify_event("do_some_work");
-        hpx::util::itt::mark_event e(notify_event);
-#endif
+        hpx::tracing::mark_event("do_some_work");
 
         if (static_cast<std::size_t>(-1) == num_thread)
         {

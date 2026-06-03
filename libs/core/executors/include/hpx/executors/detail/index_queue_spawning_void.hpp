@@ -72,10 +72,7 @@ namespace hpx::parallel::execution::detail {
             auto& local_queue = state->queues[worker_thread].data_;
             while ((index = local_queue.template pop<Which>()))
             {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-                static hpx::util::itt::event notify_event("do_work_chunk");
-                hpx::util::itt::mark_event e(notify_event);
-#endif
+
                 hpx::tracing::mark_event evt("do_work_chunk");
 
                 auto const i_begin = *index * chunk_size;
@@ -107,11 +104,6 @@ namespace hpx::parallel::execution::detail {
                     while (
                         (index = neighbor_queue.template pop<opposite_end>()))
                     {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-                        static hpx::util::itt::event notify_event(
-                            "do_work_chunk (stealing)");
-                        hpx::util::itt::mark_event e(notify_event);
-#endif
                         hpx::tracing::mark_event evt(
                             "do_work_chunk (stealing)");
 
@@ -149,10 +141,7 @@ namespace hpx::parallel::execution::detail {
         // Otherwise, it will call set_value on the shared state.
         void finish() const noexcept
         {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            static hpx::util::itt::event notify_event("finish");
-            hpx::util::itt::mark_event e(notify_event);
-#endif
+
             hpx::tracing::mark_event evt("finish");
 
             std::uint32_t const prev_value =
@@ -430,11 +419,7 @@ namespace hpx::parallel::execution::detail {
         void execute(hpx::threads::thread_description const& desc,
             threads::thread_pool_base* pool)
         {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            static hpx::util::itt::event notify_event(
-                "index_queue_spawning::execute");
-            hpx::util::itt::mark_event e(notify_event);
-#endif
+
             hpx::tracing::mark_event evt("index_queue_spawning::execute");
 
             auto const size =

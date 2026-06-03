@@ -198,15 +198,16 @@ namespace hpx {
 #endif
         }
 
-        [[nodiscard]] util::itt::string_handle get_function_annotation_itt()
+        [[nodiscard]] hpx::tracing::annotation_handle get_function_annotation_tracing()
             const
         {
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            return vptr->get_function_annotation_itt(object);
-#else
-            static util::itt::string_handle sh;
-            return sh;
+#if defined(HPX_HAVE_THREAD_DESCRIPTION)
+            if (vptr->get_function_annotation_tracing)
+            {
+                return vptr->get_function_annotation_tracing(object);
+            }
 #endif
+            return hpx::tracing::annotation_handle{};
         }
 
     private:
@@ -250,16 +251,14 @@ namespace hpx::traits {
         }
     };
 
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
     HPX_CXX_CORE_EXPORT template <typename Sig>
-    struct get_function_annotation_itt<hpx::function_ref<Sig>>
+    struct get_function_annotation_tracing<hpx::function_ref<Sig>>
     {
-        [[nodiscard]] static util::itt::string_handle call(
+        [[nodiscard]] static hpx::tracing::annotation_handle call(
             hpx::function_ref<Sig> const& f) noexcept
         {
-            return f.get_function_annotation_itt();
+            return f.get_function_annotation_tracing();
         }
     };
-#endif
 }    // namespace hpx::traits
 #endif

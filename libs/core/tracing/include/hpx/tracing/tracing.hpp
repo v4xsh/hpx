@@ -56,12 +56,18 @@ namespace hpx::util::external_timer {
 
 #if defined(HPX_HAVE_TRACY)
 #include <hpx/tracing/backends/tracy.hpp>
+#define HPX_TRACING_MARK_EVENT(name) hpx::tracing::mark_event hpx_trace_mark_(name)
 #elif defined(HPX_HAVE_ITTNOTIFY) && HPX_HAVE_ITTNOTIFY != 0
 #include <hpx/tracing/backends/ittnotify.hpp>
+#define HPX_TRACING_MARK_EVENT(name)                                           \
+    static hpx::util::itt::event hpx_trace_event_(name);                       \
+    hpx::util::itt::mark_event hpx_trace_mark_(hpx_trace_event_)
 #elif defined(HPX_HAVE_APEX)
 #include <hpx/tracing/backends/apex.hpp>
+#define HPX_TRACING_MARK_EVENT(name)
 #else
 #include <hpx/tracing/backends/empty.hpp>
+#define HPX_TRACING_MARK_EVENT(name)
 #endif
 
 #endif

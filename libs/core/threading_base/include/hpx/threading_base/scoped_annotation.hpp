@@ -18,9 +18,7 @@
 #include <hpx/threading_base/thread_description.hpp>
 #include <hpx/threading_base/thread_helpers.hpp>
 
-#if HPX_HAVE_ITTNOTIFY != 0
-#include <hpx/modules/itt_notify.hpp>
-#endif
+
 #endif
 
 #include <string>
@@ -53,72 +51,6 @@ namespace hpx {
 
         // add empty (but non-trivial) destructor to silence warnings
         HPX_HOST_DEVICE ~scoped_annotation() {}
-    };
-#elif HPX_HAVE_ITTNOTIFY != 0
-    HPX_CXX_CORE_EXPORT struct [[nodiscard]] scoped_annotation
-    {
-        scoped_annotation(scoped_annotation const&) = delete;
-        scoped_annotation(scoped_annotation&&) = delete;
-        scoped_annotation& operator=(scoped_annotation const&) = delete;
-        scoped_annotation& operator=(scoped_annotation&&) = delete;
-
-        explicit scoped_annotation(char const* name)
-          : task_(thread_domain_, hpx::util::itt::string_handle(name))
-        {
-            auto const* self = hpx::threads::get_self_ptr();
-            if (self != nullptr)
-            {
-                desc_ = threads::get_thread_id_data(self->get_thread_id())
-                            ->set_description(name);
-            }
-        }
-
-        explicit scoped_annotation(std::string name)
-          : task_(thread_domain_,
-                hpx::util::itt::string_handle(
-                    detail::store_function_annotation(name)))
-        {
-            auto const* self = hpx::threads::get_self_ptr();
-            if (self != nullptr)
-            {
-                char const* name_c_str =
-                    detail::store_function_annotation(HPX_MOVE(name));
-                desc_ = threads::get_thread_id_data(self->get_thread_id())
-                            ->set_description(name_c_str);
-            }
-        }
-
-        template <typename F,
-            typename =
-                std::enable_if_t<!std::is_same_v<std::decay_t<F>, std::string>>>
-        explicit scoped_annotation(F&& f)
-          : task_(thread_domain_,
-                hpx::traits::get_function_annotation_itt<std::decay_t<F>>::call(
-                    f))
-        {
-            auto const* self = hpx::threads::get_self_ptr();
-            if (self != nullptr)
-            {
-                desc_ =
-                    threads::get_thread_id_data(self->get_thread_id())
-                        ->set_description(hpx::threads::thread_description(f));
-            }
-        }
-
-        ~scoped_annotation()
-        {
-            auto const* self = hpx::threads::get_self_ptr();
-            if (self != nullptr)
-            {
-                threads::get_thread_id_data(self->get_thread_id())
-                    ->set_description(desc_);
-            }
-        }
-
-    private:
-        hpx::util::itt::thread_domain thread_domain_;
-        hpx::util::itt::task task_;
-        hpx::threads::thread_description desc_;
     };
 #else
     HPX_CXX_CORE_EXPORT struct [[nodiscard]] scoped_annotation

@@ -19,6 +19,15 @@ namespace hpx::tracing {
     HPX_CXX_CORE_EXPORT using enable_parent_task_handler_type = bool (*)();
 
     ////////////////////////////////////////////////////////////////////////////
+    HPX_CXX_CORE_EXPORT using annotation_handle = char const*;
+
+    HPX_CXX_CORE_EXPORT constexpr annotation_handle create_annotation_handle(
+        char const* name) noexcept
+    {
+        return name;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
     HPX_CXX_CORE_EXPORT struct region_init_data
     {
     };

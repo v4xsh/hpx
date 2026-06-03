@@ -719,10 +719,7 @@ namespace hpx::parallel {
             auto diagonal_index = [n = static_cast<std::size_t>(n)](
                                       auto&& shape, std::size_t cores) {
 
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-                static hpx::util::itt::event notify_event("get diagonal index");
-                hpx::util::itt::mark_event e(notify_event);
-#endif
+
                 hpx::tracing::mark_event evt("get diagonal index");
                 auto const shape_size = std::size(shape);
 
@@ -759,11 +756,7 @@ namespace hpx::parallel {
             Comp&& comp, Proj1 proj1, Proj2 proj2)
         {
 
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            static hpx::util::itt::event notify_event(
-                "get diagonal intersection");
-            hpx::util::itt::mark_event e(notify_event);
-#endif
+
             hpx::tracing::mark_event evt("get diagonal intersection");
             if (len1 == 0)
                 return {0, (std::min) (k, len2)};
@@ -815,11 +808,7 @@ namespace hpx::parallel {
             Comp&& comp, hpx::identity, hpx::identity)
         {
 
-#if HPX_HAVE_ITTNOTIFY != 0 && !defined(HPX_HAVE_APEX)
-            static hpx::util::itt::event notify_event(
-                "get diagonal intersection");
-            hpx::util::itt::mark_event e(notify_event);
-#endif
+
             hpx::tracing::mark_event evt("get diagonal intersection");
             if (len1 == 0)
                 return {0, (std::min) (k, len2)};
